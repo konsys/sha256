@@ -1,4 +1,3 @@
-const sha256 = require("js-sha256");
 const {
   toBinaryArray,
   binaryHello,
