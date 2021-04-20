@@ -11,7 +11,7 @@
 (function (root, undefined) {
   "use strict";
 
-  const HEX_CHARS = [
+  var HEX_CHARS = [
     "0",
     "1",
     "2",
@@ -29,7 +29,7 @@
     "e",
     "f",
   ];
-  const HEX_TABLE = {
+  var HEX_TABLE = {
     0: 0,
     1: 1,
     2: 2,
@@ -54,7 +54,7 @@
     F: 15,
   };
 
-  const K = [
+  var K = [
     0x428a2f98,
     0x71374491,
     0xb5c0fbcf,
@@ -121,48 +121,47 @@
     0xc67178f2,
   ];
 
-  const sha256 = (message) => {
+  var sha256 = function (message) {
     return sha2(message, true);
   };
 
-  const sha224 = (message) => {
+  var sha224 = function (message) {
     return sha2(message, false);
   };
 
-  const sha2 = (message, is256) => {
-    if (!is256) {
-      is256 = true;
-    }
+  var sha2 = function (message, is256) {
+    if (is256 === undefined) is256 = true;
 
-    const blocks = isUTF8(message)
+    var blocks = hasUTF8(message)
       ? UTF8toBlocks(message)
       : ASCIItoBlocks(message);
-
-    let h0 = 0xc1059ed8;
-    let h1 = 0x367cd507;
-    let h2 = 0x3070dd17;
-    let h3 = 0xf70e5939;
-    let h4 = 0xffc00b31;
-    let h5 = 0x68581511;
-    let h6 = 0x64f98fa7;
-    let h7 = 0xbefa4fa4;
     if (is256) {
-      h0 = 0x6a09e667;
-      h1 = 0xbb67ae85;
-      h2 = 0x3c6ef372;
-      h3 = 0xa54ff53a;
-      h4 = 0x510e527f;
-      h5 = 0x9b05688c;
-      h6 = 0x1f83d9ab;
-      h7 = 0x5be0cd19;
+      var h0 = 0x6a09e667;
+      var h1 = 0xbb67ae85;
+      var h2 = 0x3c6ef372;
+      var h3 = 0xa54ff53a;
+      var h4 = 0x510e527f;
+      var h5 = 0x9b05688c;
+      var h6 = 0x1f83d9ab;
+      var h7 = 0x5be0cd19;
+    } // 224
+    else {
+      var h0 = 0xc1059ed8;
+      var h1 = 0x367cd507;
+      var h2 = 0x3070dd17;
+      var h3 = 0xf70e5939;
+      var h4 = 0xffc00b31;
+      var h5 = 0x68581511;
+      var h6 = 0x64f98fa7;
+      var h7 = 0xbefa4fa4;
     }
 
-    for (let i = 0, length = blocks.length; i < length; i += 16) {
-      let w = [],
+    for (var i = 0, length = blocks.length; i < length; i += 16) {
+      var w = [],
         s0,
         s1;
-      for (let j = 0; j < 16; ++j) w[j] = blocks[i + j];
-      for (let j = 16; j < 64; ++j) {
+      for (var j = 0; j < 16; ++j) w[j] = blocks[i + j];
+      for (var j = 16; j < 64; ++j) {
         s0 =
           rightrotate(w[j - 15], 7) ^
           rightrotate(w[j - 15], 18) ^
@@ -174,17 +173,17 @@
         w[j] = w[j - 16] + s0 + w[j - 7] + s1;
       }
 
-      let a = h0;
-      let b = h1;
-      let c = h2;
-      let d = h3;
-      let e = h4;
-      let f = h5;
-      let g = h6;
-      let h = h7;
-      let maj, t1, t2, ch;
+      var a = h0;
+      var b = h1;
+      var c = h2;
+      var d = h3;
+      var e = h4;
+      var f = h5;
+      var g = h6;
+      var h = h7;
+      var maj, t1, t2, ch;
 
-      for (let j = 0; j < 64; ++j) {
+      for (var j = 0; j < 64; ++j) {
         s0 = rightrotate(a, 2) ^ rightrotate(a, 13) ^ rightrotate(a, 22);
         maj = (a & b) ^ (a & c) ^ (b & c);
         t2 = s0 + maj;
@@ -212,7 +211,7 @@
       h7 += h;
     }
 
-    let hex =
+    var hex =
       toHexString(h0) +
       toHexString(h1) +
       toHexString(h2) +
@@ -220,20 +219,18 @@
       toHexString(h4) +
       toHexString(h5) +
       toHexString(h6);
-    if (is256) {
-      hex += toHexString(h7);
-    }
+    if (is256) hex += toHexString(h7);
     return hex;
   };
 
-  const rightrotate = (x, c) => {
+  var rightrotate = function (x, c) {
     return (x >>> c) | (x << (32 - c));
   };
 
-  const toHexString = (num) => {
-    let hex = "";
-    for (let i = 0; i < 4; i++) {
-      const offset = (3 - i) << 3;
+  var toHexString = function (num) {
+    var hex = "";
+    for (var i = 0; i < 4; i++) {
+      var offset = (3 - i) << 3;
       hex +=
         HEX_CHARS[(num >> (offset + 4)) & 0x0f] +
         HEX_CHARS[(num >> offset) & 0x0f];
@@ -241,57 +238,45 @@
     return hex;
   };
 
-  const isUTF8 = (message) => {
-    let i = message.length;
-    while (i--) {
-      if (message.charCodeAt(i) > 127) {
-        return true;
-      }
-    }
+  var hasUTF8 = function (message) {
+    var i = message.length;
+    while (i--) if (message.charCodeAt(i) > 127) return true;
     return false;
   };
 
-  const ASCIItoBlocks = (message) => {
+  var ASCIItoBlocks = function (message) {
     // a block is 32 bits(4 bytes), a chunk is 512 bits(64 bytes)
-    const length = message.length;
-    const chunkCount = ((length + 8) >> 6) + 1;
-    const blockCount = chunkCount << 4; // chunkCount * 16
-    const blocks = [];
-    let i;
-    for (i = 0; i < blockCount; ++i) {
-      blocks[i] = 0;
-    }
-
-    for (i = 0; i < length; ++i) {
+    var length = message.length;
+    var chunkCount = ((length + 8) >> 6) + 1;
+    var blockCount = chunkCount << 4; // chunkCount * 16
+    var blocks = [];
+    var i;
+    for (i = 0; i < blockCount; ++i) blocks[i] = 0;
+    for (i = 0; i < length; ++i)
       blocks[i >> 2] |= message.charCodeAt(i) << ((3 - (i % 4)) << 3);
-    }
-
     blocks[i >> 2] |= 0x80 << ((3 - (i % 4)) << 3);
     blocks[blockCount - 1] = length << 3; // length * 8
     return blocks;
   };
 
-  const UTF8toBlocks = (message) => {
-    const uri = encodeURIComponent(message);
-    const blocks = [];
+  var UTF8toBlocks = function (message) {
+    var uri = encodeURIComponent(message);
+    var blocks = [];
     for (var i = 0, bytes = 0, length = uri.length; i < length; ++i) {
-      let c = uri.charCodeAt(i);
-      if (c == 37) {
+      var c = uri.charCodeAt(i);
+      if (c == 37)
+        // %
         blocks[bytes >> 2] |=
           ((HEX_TABLE[uri.charAt(++i)] << 4) | HEX_TABLE[uri.charAt(++i)]) <<
           ((3 - (bytes % 4)) << 3);
-      } else {
-        blocks[bytes >> 2] |= c << ((3 - (bytes % 4)) << 3);
-      }
+      else blocks[bytes >> 2] |= c << ((3 - (bytes % 4)) << 3);
       ++bytes;
     }
-    const chunkCount = ((bytes + 8) >> 6) + 1;
-    const blockCount = chunkCount << 4; // chunkCount * 16
-    const index = bytes >> 2;
+    var chunkCount = ((bytes + 8) >> 6) + 1;
+    var blockCount = chunkCount << 4; // chunkCount * 16
+    var index = bytes >> 2;
     blocks[index] |= 0x80 << ((3 - (bytes % 4)) << 3);
-    for (let i = index + 1; i < blockCount; ++i) {
-      blocks[i] = 0;
-    }
+    for (var i = index + 1; i < blockCount; ++i) blocks[i] = 0;
     blocks[blockCount - 1] = bytes << 3; // bytes * 8
     return blocks;
   };

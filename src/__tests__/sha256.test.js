@@ -5,10 +5,8 @@ test("simple hash test", () => {
     "d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592"
   );
 
-  expect(
-    "d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592"
-  ).toStrictEqual(
-    "d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592"
+  expect(sha256("семейства")).toStrictEqual(
+    "ecda56fdfaa962f60f177a20c8454376cfc841f08df924efae01344c354e2a5f"
   );
 });
 
