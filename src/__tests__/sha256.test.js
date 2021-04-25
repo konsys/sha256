@@ -1,13 +1,50 @@
-const sha256 = require("../sha256");
+const { sha256, UTF8toBlocks } = require("../sha256");
+const { addedNulls, toBinaryArray } = require("../toBinary");
+// const hwBinary =
+//   "01101000 01100101 01101100 01101100 01101111 00100000 01110111 01101111 01110010 01101100 01100100 01101000 01100101 01101100 01101100 01101111 00100000 01110111 01101111 01110010 01101100 01100100 ";
+// const blocks = UTF8toBlocks("hello world");
+// let res = blocks.reduce((acc, v) => (acc += toBinaryArray(v)), "0");
+// res = res
+//   .split("")
+//   .reduce((acc, v, i) => (acc += i % 8 === 0 && i > 0 ? " " + v : v), "");
 
 test("simple hash test", () => {
-  expect(sha256("The quick brown fox jumps over the lazy dog")).toStrictEqual(
-    "d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592"
+  expect(UTF8toBlocks("c")).toStrictEqual([
+    1669332992,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    8,
+  ]);
+  expect(sha256("c")).toStrictEqual(
+    "2E7D2C03A9507AE265ECF5B5356885A53393A2029D241394997265A1A25AEFC6".toLowerCase()
   );
 
-  expect(sha256("семейства")).toStrictEqual(
-    "ecda56fdfaa962f60f177a20c8454376cfc841f08df924efae01344c354e2a5f"
-  );
+  // expect(sha256("The quick brown fox jumps over the lazy dog")).toStrictEqual(
+  //   "d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592"
+  // );
+
+  // expect(sha256("c")).toStrictEqual(
+  //   "ecda56fdfaa962f60f177a20c8454376cfc841f08df924efae01344c354e2a5f"
+  // );
+
+  // expect(sha256("семейства")).toStrictEqual(
+  //   "ecda56fdfaa962f60f177a20c8454376cfc841f08df924efae01344c354e2a5f"
+  // );
+
+  // expect(res).toStrictEqual(hwBinary);
+  // expect(UTF8toBlocks("hello world")).toStrictEqual(addedNulls);
 });
 
 const k =

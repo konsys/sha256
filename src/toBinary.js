@@ -1,11 +1,15 @@
 const toBinaryArray = (input) => {
-  const result = input.split("").reduce((acc, v) => {
-    const bin = v.charCodeAt().toString(2);
-    const binaryValue = Array(8 - bin.length + 1).join("0") + bin;
-    acc.push(binaryValue);
-    return acc;
-  }, []);
-  return result;
+  if (typeof input === "string") {
+    const result = input.split("").reduce((acc, v) => {
+      const bin = v.charCodeAt().toString(2);
+      const binaryValue = Array(8 - bin.length + 1).join("0") + bin;
+      acc.push(binaryValue);
+      return acc;
+    }, []);
+    return result;
+  } else if (typeof input === "number") {
+    return dec2bin(input);
+  }
 };
 
 const binaryHello = [
@@ -41,6 +45,13 @@ const binaryAddNulls = (input) => {
   }
   return input;
 };
+
+function dec2bin(dec) {
+  return (dec >>> 0)
+    .toString(2)
+    .split("")
+    .reduce((acc, v, i) => (acc += i % 8 === 0 && i > 0 ? " " + v : v), "");
+}
 
 module.exports = {
   toBinaryArray,
