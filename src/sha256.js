@@ -158,7 +158,7 @@ const sha2 = (message, is256) => {
     h7 = 0x5be0cd19;
   }
 
-  for (let i = 0, length = blocks.length; i < length; i += 16) {
+  for (let i = 0; i < blocks.length; i += 16) {
     let w = [],
       s0,
       s1;
@@ -281,11 +281,11 @@ const UTF8toBlocks = (message) => {
 
   const blocks = [];
   let bytes = 0;
-  let length = uri.length;
 
-  for (let i = 0; i < length; i++) {
+  for (let i = 0; i < uri.length; i++) {
     let c = uri.charCodeAt(i);
 
+    // 37 - пробел
     if (c === 37) {
       const tb =
         ((HEX_TABLE[uri.charAt(++i)] << 4) | HEX_TABLE[uri.charAt(++i)]) <<
@@ -295,38 +295,22 @@ const UTF8toBlocks = (message) => {
 
       blocks[bytes >> 2] |= tb;
     } else {
-      // const t = 44 % 4;
-      // console.log(
-      //   111111,
-      //   t,
-      //   c,
-      //   3,
-      //   toBinaryArray(c).replace(" ", ""),
-      //   4,
-      //   toBinaryArray(c << 2).replace(" ", ""),
-      //   c << 2,
-      //   5,
-      //   toBinaryArray((c << 3) << 3).replace(" ", ""),
-      //   (c << 3) << 3
-      //   // (c << ((3 - (bytes % 4)) << 3)) | (c << ((3 - (bytes % 4)) << 3))
-      //   // blocks,
-      //   // bytes,
-      //   // bytes >> 2,
-      //   // toBinaryArray(3 - (bytes % 4)),
-      //   // toBinaryArray((3 - (bytes % 4)) << 3),
-      //   // c << ((3 - (bytes % 4)) << 3),
-      //   // toBinaryArray(c << ((3 - (bytes % 4)) << 3))
-      // );
+      const r = 3 - (bytes % 4); // 3 2 1 0 3 2 1 0...
 
-      const r = 3 - (bytes % 4);
-      const r1 = r << 3; // умножаем на 8
-      blocks[bytes >> 2] |= c << r1;
+      const r1 = r << 3; // умножаем на 8 (24, 16, 8, 0, 24, 16, 8, 0...)
+      const bytesMult = bytes >> 2; // делим на 4 без дробной части (0 0 0 0 1 1 1 1 2 2 2 2 3 3 3 3 4...)
+
+      console.log(11111, toBinaryArray(blocks[bytesMult]));
+      blocks[bytesMult] = blocks[bytesMult] | (c << r1);
+      console.log(22222, toBinaryArray(c << r1));
+      console.log(33333, c, r1, c << r1);
     }
 
     ++bytes;
   }
 
   const chunkCount = ((bytes + 8) >> 6) + 1;
+
   const blockCount = chunkCount << 4; // chunkCount * 16
   const index = bytes >> 2;
   blocks[index] |= 0x80 << ((3 - (bytes % 4)) << 3);
@@ -336,6 +320,7 @@ const UTF8toBlocks = (message) => {
   }
 
   blocks[blockCount - 1] = bytes << 3; // bytes * 8
+
   return blocks;
 };
 
