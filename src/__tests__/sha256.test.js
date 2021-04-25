@@ -1,7 +1,7 @@
 const { sha256, UTF8toBlocks } = require("../sha256");
 const { addedNulls, toBinaryArray } = require("../toBinary");
-// const hwBinary =
-//   "01101000 01100101 01101100 01101100 01101111 00100000 01110111 01101111 01110010 01101100 01100100 01101000 01100101 01101100 01101100 01101111 00100000 01110111 01101111 01110010 01101100 01100100 ";
+const hwBinary =
+  "01101000 01100101 01101100 01101100 01101111 00100000 01110111 01101111 01110010 01101100 01100100 01101000 01100101 01101100 01101100 01101111 00100000 01110111 01101111 01110010 01101100 01100100 ";
 // const blocks = UTF8toBlocks("hello world");
 // let res = blocks.reduce((acc, v) => (acc += toBinaryArray(v)), "0");
 // res = res
@@ -28,7 +28,26 @@ test("simple hash test", () => {
   //   8,
   // ]);
 
-  expect(UTF8toBlocks("ca")).toStrictEqual([
+  // expect(UTF8toBlocks("canada")).toStrictEqual([
+  //   1669332992,
+  //   0,
+  //   0,
+  //   0,
+  //   0,
+  //   0,
+  //   0,
+  //   0,
+  //   0,
+  //   0,
+  //   0,
+  //   0,
+  //   0,
+  //   0,
+  //   0,
+  //   8,
+  // ]);
+
+  expect(UTF8toBlocks("hello world")).toStrictEqual([
     1669332992,
     0,
     0,

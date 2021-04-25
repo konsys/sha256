@@ -50,7 +50,7 @@ function dec2bin(dec) {
   return (dec >>> 0)
     .toString(2)
     .split("")
-    .reduce((acc, v, i) => (acc += i % 8 === 0 && i > 0 ? " " + v : v), "");
+    .reduce((acc, v, i) => (acc += i % 8 === 0 && i > 0 ? " 0" + v : v), "0");
 }
 
 module.exports = {

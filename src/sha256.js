@@ -291,8 +291,6 @@ const UTF8toBlocks = (message) => {
         ((HEX_TABLE[uri.charAt(++i)] << 4) | HEX_TABLE[uri.charAt(++i)]) <<
         ((3 - (bytes % 4)) << 3);
 
-      const tr = tb << 4;
-
       blocks[bytes >> 2] |= tb;
     } else {
       const r = 3 - (bytes % 4); // 3 2 1 0 3 2 1 0...
@@ -300,19 +298,18 @@ const UTF8toBlocks = (message) => {
       const r1 = r << 3; // умножаем на 8 (24, 16, 8, 0, 24, 16, 8, 0...)
       const bytesMult = bytes >> 2; // делим на 4 без дробной части (0 0 0 0 1 1 1 1 2 2 2 2 3 3 3 3 4...)
 
-      console.log(11111, toBinaryArray(blocks[bytesMult]));
       blocks[bytesMult] = blocks[bytesMult] | (c << r1);
-      console.log(22222, toBinaryArray(c << r1));
-      console.log(33333, c, r1, c << r1);
     }
 
-    ++bytes;
+    ++bytes; // 1, 2, 3, 4, 5, 6...
   }
 
-  const chunkCount = ((bytes + 8) >> 6) + 1;
+  const chunkCount = ((bytes + 8) >> 6) + 1; // (b + 8) / 2^6(64) + 1
 
   const blockCount = chunkCount << 4; // chunkCount * 16
+
   const index = bytes >> 2;
+
   blocks[index] |= 0x80 << ((3 - (bytes % 4)) << 3);
 
   for (let i = index + 1; i < blockCount; i++) {
@@ -321,6 +318,11 @@ const UTF8toBlocks = (message) => {
 
   blocks[blockCount - 1] = bytes << 3; // bytes * 8
 
+  console.log(
+    toBinaryArray(blocks[0]),
+    toBinaryArray(blocks[1]),
+    toBinaryArray(blocks[2])
+  );
   return blocks;
 };
 
